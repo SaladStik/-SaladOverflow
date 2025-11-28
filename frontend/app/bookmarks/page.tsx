@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { Bookmark, ArrowLeft, Loader2, ArrowUp, ArrowDown, MessageCircle, Share2 } from 'lucide-react';
+import { Bookmark, ArrowLeft, Loader2, ArrowUp, ArrowDown, MessageCircle } from 'lucide-react';
 import { api } from '@/lib/api';
 import { useAuthStore } from '@/lib/store';
 import { formatTimeAgo } from '@/lib/utils';
@@ -229,16 +229,6 @@ export default function BookmarksPage() {
                   className="flex items-center gap-2 text-sage-400 hover:text-sage-300 transition ml-auto fill-sage-400"
                 >
                   <Bookmark className="w-5 h-5 fill-sage-400" />
-                </button>
-                <button 
-                  onClick={(e) => { 
-                    e.stopPropagation();
-                    navigator.clipboard.writeText(`${window.location.origin}/posts/${post.id}`);
-                    toast.success('Link copied to clipboard');
-                  }}
-                  className="flex items-center gap-2 text-cream-300/80 hover:text-cream-100 transition"
-                >
-                  <Share2 className="w-5 h-5" />
                 </button>
               </div>
             </div>
