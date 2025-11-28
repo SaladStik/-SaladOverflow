@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { ArrowUp, ArrowDown, MessageCircle, Bookmark, Share2, Code, Hash, TrendingUp, Award } from 'lucide-react';
+import { ArrowUp, ArrowDown, MessageCircle, Bookmark, Code, Hash, TrendingUp, Award } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { api } from '@/lib/api';
@@ -266,38 +266,6 @@ export default function FeedPage() {
                       className="flex items-center gap-2 text-cream-300/80 hover:text-sage-400 transition ml-auto"
                     >
                       <Bookmark className={`w-5 h-5 ${bookmarked[post.id] ? 'fill-sage-400 text-sage-400' : ''}`} />
-                    </button>
-                    <button 
-                      onClick={(e) => { 
-                        e.stopPropagation();
-                        const handleShare = async () => {
-                          const postUrl = `${window.location.origin}/posts/${post.id}`;
-                          
-                          if (navigator.share) {
-                            try {
-                              await navigator.share({
-                                title: post.title,
-                                url: postUrl
-                              });
-                              toast.success('Shared successfully');
-                            } catch (error) {
-                              // User cancelled share
-                            }
-                          } else {
-                            // Fallback: copy to clipboard
-                            try {
-                              await navigator.clipboard.writeText(postUrl);
-                              toast.success('Link copied to clipboard');
-                            } catch (error) {
-                              toast.error('Failed to copy link');
-                            }
-                          }
-                        };
-                        handleShare();
-                      }}
-                      className="flex items-center gap-2 text-cream-300/80 hover:text-cream-100 transition"
-                    >
-                      <Share2 className="w-5 h-5" />
                     </button>
                   </div>
                 </div>
