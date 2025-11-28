@@ -268,7 +268,25 @@ export default function FeedPage() {
                       <Bookmark className={`w-5 h-5 ${bookmarked[post.id] ? 'fill-sage-400 text-sage-400' : ''}`} />
                     </button>
                     <button 
-                      onClick={(e) => e.stopPropagation()}
+                      onClick={(e) => { 
+                        e.stopPropagation();
+                        const postUrl = `${window.location.origin}/posts/${post.id}`;
+                        if (navigator.share) {
+                          navigator.share({
+                            title: post.title,
+                            url: postUrl
+                          }).then(() => {
+                            toast.success('Shared successfully');
+                          }).catch(() => {
+                            // User cancelled or error, fallback to clipboard
+                            navigator.clipboard.writeText(postUrl);
+                            toast.success('Link copied to clipboard');
+                          });
+                        } else {
+                          navigator.clipboard.writeText(postUrl);
+                          toast.success('Link copied to clipboard');
+                        }
+                      }}
                       className="flex items-center gap-2 text-cream-300/80 hover:text-cream-100 transition"
                     >
                       <Share2 className="w-5 h-5" />
