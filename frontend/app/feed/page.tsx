@@ -270,22 +270,30 @@ export default function FeedPage() {
                     <button 
                       onClick={(e) => { 
                         e.stopPropagation();
-                        const postUrl = `${window.location.origin}/posts/${post.id}`;
-                        if (navigator.share) {
-                          navigator.share({
-                            title: post.title,
-                            url: postUrl
-                          }).then(() => {
-                            toast.success('Shared successfully');
-                          }).catch(() => {
-                            // User cancelled or error, fallback to clipboard
-                            navigator.clipboard.writeText(postUrl);
-                            toast.success('Link copied to clipboard');
-                          });
-                        } else {
-                          navigator.clipboard.writeText(postUrl);
-                          toast.success('Link copied to clipboard');
-                        }
+                        const handleShare = async () => {
+                          const postUrl = `${window.location.origin}/posts/${post.id}`;
+                          
+                          if (navigator.share) {
+                            try {
+                              await navigator.share({
+                                title: post.title,
+                                url: postUrl
+                              });
+                              toast.success('Shared successfully');
+                            } catch (error) {
+                              // User cancelled share
+                            }
+                          } else {
+                            // Fallback: copy to clipboard
+                            try {
+                              await navigator.clipboard.writeText(postUrl);
+                              toast.success('Link copied to clipboard');
+                            } catch (error) {
+                              toast.error('Failed to copy link');
+                            }
+                          }
+                        };
+                        handleShare();
                       }}
                       className="flex items-center gap-2 text-cream-300/80 hover:text-cream-100 transition"
                     >
