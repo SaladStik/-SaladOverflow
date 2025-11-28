@@ -1,0 +1,125 @@
+name: SaladOverflow
+
+services:
+  # MariaDB Database
+  mariadb:
+    image: mariadb:11
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: saladoverflow
+      MYSQL_USER: salad_user
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MARIADB_AUTO_UPGRADE: 1
+      TZ: UTC
+    command: --default-authentication-plugin=mysql_native_password --skip-name-resolve --bind-address=0.0.0.0
+    ports:
+      - "3399:3306"
+    volumes:
+      - ./data/mariadb:/var/lib/mysql
+      - ./init-db.sql:/docker-entrypoint-initdb.d/init-db.sql
+      - ./mariadb-custom.cnf:/etc/mysql/conf.d/custom.cnf
+    networks:
+      - saladoverflow_network
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      start_period: 10s
+      timeout: 5s
+      retries: 3
+
+  # Redis Cache
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    ports:
+      - "6899:6379"
+    volumes:
+      - ./data/redis:/data
+    networks:
+      - saladoverflow_network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+
+  # FastAPI Backend
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: saladoverflow-backend:latest
+    restart: unless-stopped
+    expose:
+      - "8000"
+    env_file:
+      - .env
+    environment:
+      - TZ=UTC
+      - database_url=mariadb+mariadbconnector://salad_user:${MYSQL_PASSWORD}@mariadb:3306/saladoverflow
+      - REDIS_URL=redis://redis:6379/0
+      - SECRET_KEY=dev-secret-key-change-in-production-please
+      - ALGORITHM=HS256
+      - ACCESS_TOKEN_EXPIRE_MINUTES=30
+      - DEBUG=True
+      - API_VERSION=v1
+      - APP_NAME=SaladOverflow API
+      - SMTP_HOST=smtp.gmail.com
+      - SMTP_PORT=587
+      - SMTP_USERNAME=YOUR_EMAIL@gmail.com
+      - SMTP_PASSWORD=YOUR_APP_PASSWORD
+      - SMTP_FROM_EMAIL=YOUR_FROM_EMAIL@domain.com
+      - SMTP_FROM_NAME=SaladOverflow Team
+      - SMTP_USE_TLS=true
+      - FRONTEND_URL=https://overflow.saladsync.ca
+      - GITHUB_CLIENT_ID=${GITHUB_CLIENT_ID}
+      - GITHUB_CLIENT_SECRET=${GITHUB_CLIENT_SECRET}
+      - GITHUB_REDIRECT_URI=https://overflow.saladsync.ca/api/v1/auth/github/callback
+    volumes:
+      - .:/app
+      - ./uploads:/app/uploads
+    networks:
+      - saladoverflow_network
+    depends_on:
+      - mariadb
+      - redis
+    command: python run.py
+
+  # Next.js Frontend
+  frontend:
+    build:
+      context: ../frontend
+      dockerfile: Dockerfile
+      args:
+        - NEXT_PUBLIC_API_URL=https://overflow.saladsync.ca
+    image: saladoverflow-frontend:latest
+    restart: unless-stopped
+    expose:
+      - "3000"
+    environment:
+      - NODE_ENV=production
+      - TZ=UTC
+    networks:
+      - saladoverflow_network
+    depends_on:
+      - backend
+
+  # Nginx Reverse Proxy
+  nginx:
+    image: nginx:alpine
+    restart: unless-stopped
+    ports:
+      - "5050:80"
+      - "5443:443"
+    volumes:
+      - ../nginx/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./uploads:/app/uploads:ro
+    networks:
+      - saladoverflow_network
+    depends_on:
+      - backend
+      - frontend
+
+networks:
+  saladoverflow_network:
+    driver: bridge

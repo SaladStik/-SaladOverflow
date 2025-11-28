@@ -1,0 +1,232 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    @apply border-charcoal-100;
+  }
+
+  body {
+    @apply bg-charcoal-500 text-cream-200;
+  }
+
+  /* Scrollbar Styles */
+  ::-webkit-scrollbar {
+    width: 10px;
+  }
+
+  ::-webkit-scrollbar-track {
+    @apply bg-charcoal-500;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-sage-500 rounded-lg;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-sage-400;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply px-4 py-2 bg-sage-500 text-cream-100 rounded-lg hover:bg-sage-600 transition font-medium shadow-lg shadow-sage-500/40;
+  }
+
+  .btn-secondary {
+    @apply px-4 py-2 bg-charcoal-400 text-cream-200 rounded-lg hover:bg-charcoal-300 transition font-medium border-2 border-sage-600;
+  }
+
+  .input-primary {
+    @apply w-full px-4 py-2 bg-charcoal-400 border-2 border-sage-600 rounded-lg text-cream-100 placeholder-cream-300/40 focus:outline-none focus:ring-2 focus:ring-sage-400 focus:border-sage-400;
+  }
+
+  .card {
+    @apply bg-charcoal-400 border-2 border-sage-700/50 rounded-xl shadow-xl;
+  }
+
+  .card-hover {
+    @apply card hover:border-sage-500 hover:shadow-sage-500/30 hover:shadow-2xl transition;
+  }
+
+  /* Markdown Styles */
+  .markdown {
+    @apply text-cream-200 leading-relaxed;
+  }
+
+  .markdown h1 {
+    @apply text-3xl font-bold text-cream-100 mb-4 mt-6;
+  }
+
+  .markdown h2 {
+    @apply text-2xl font-bold text-cream-100 mb-3 mt-5;
+  }
+
+  .markdown h3 {
+    @apply text-xl font-bold text-cream-200 mb-2 mt-4;
+  }
+
+  .markdown p {
+    @apply mb-4;
+  }
+
+  .markdown a {
+    @apply text-sage-400 hover:text-sage-300 underline decoration-sage-400 decoration-2 underline-offset-2 transition-colors;
+  }
+
+  .markdown code {
+    @apply bg-charcoal-500 border-2 border-sage-700 rounded px-1.5 py-0.5 text-sm font-mono text-cream-200;
+  }
+
+  .markdown pre {
+    @apply bg-charcoal-500 border-2 border-sage-700 rounded-lg p-4 overflow-x-auto mb-4;
+  }
+
+  .markdown pre code {
+    @apply bg-transparent border-none p-0 text-cream-200;
+  }
+
+  .markdown ul {
+    @apply list-disc list-inside mb-4 space-y-2;
+  }
+
+  .markdown ol {
+    @apply list-decimal list-inside mb-4 space-y-2;
+  }
+
+  .markdown blockquote {
+    @apply border-l-4 border-sage-500 pl-4 italic text-cream-200 my-4;
+  }
+
+  .markdown img {
+    @apply rounded-lg my-4 max-w-full;
+  }
+
+  .markdown table {
+    @apply w-full border-collapse mb-4;
+  }
+
+  .markdown th {
+    @apply bg-charcoal-400 border border-charcoal-100 px-4 py-2 text-left font-semibold;
+  }
+
+  .markdown td {
+    @apply border border-charcoal-100 px-4 py-2;
+  }
+}
+
+@layer utilities {
+  .text-gradient {
+    @apply bg-gradient-to-r from-sage-400 to-sage-200 bg-clip-text text-transparent;
+  }
+
+  .animate-shimmer {
+    animation: shimmer 2s linear infinite;
+    background: linear-gradient(
+      to right,
+      transparent 0%,
+      rgba(137, 152, 120, 0.15) 50%,
+      transparent 100%
+    );
+    background-size: 200% 100%;
+  }
+
+  @keyframes shimmer {
+    0% {
+      background-position: -200% 0;
+    }
+    100% {
+      background-position: 200% 0;
+    }
+  }
+}
+
+/* Syntax Highlighting for Code Blocks */
+.hljs {
+  display: block;
+  overflow-x: auto;
+  padding: 1em;
+  background: transparent;
+  color: #f7f7f2;
+}
+
+.hljs-comment,
+.hljs-quote {
+  color: #899878;
+  font-style: italic;
+}
+
+.hljs-keyword,
+.hljs-selector-tag,
+.hljs-subst {
+  color: #4a7c4a;
+  font-weight: bold;
+}
+
+.hljs-number,
+.hljs-literal,
+.hljs-variable,
+.hljs-template-variable,
+.hljs-tag .hljs-attr {
+  color: #e4e6c3;
+}
+
+.hljs-string,
+.hljs-doctag {
+  color: #b8d4b8;
+}
+
+.hljs-title,
+.hljs-section,
+.hljs-selector-id {
+  color: #8fb88f;
+  font-weight: bold;
+}
+
+.hljs-type,
+.hljs-class .hljs-title {
+  color: #6b9d6b;
+}
+
+.hljs-tag,
+.hljs-name,
+.hljs-attribute {
+  color: #4a7c4a;
+  font-weight: normal;
+}
+
+.hljs-regexp,
+.hljs-link {
+  color: #899878;
+}
+
+.hljs-symbol,
+.hljs-bullet {
+  color: #e4e6c3;
+}
+
+.hljs-built_in,
+.hljs-builtin-name {
+  color: #6b9d6b;
+}
+
+.hljs-meta {
+  color: #899878;
+}
+
+.hljs-deletion {
+  background: #2d5a2d;
+}
+
+.hljs-addition {
+  background: #234823;
+}
+
+.hljs-emphasis {
+  font-style: italic;
+}
+
+.hljs-strong {
+  font-weight: bold;
+}
