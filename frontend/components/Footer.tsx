@@ -67,7 +67,7 @@ export default function Footer() {
             <ul className="space-y-2">
               <li>
                 <a 
-                  href="https://github.com/SaladStik/SaladOverflow" 
+                  href="https://github.com/SaladStik/CPRG-306-E-SaladOverflow" 
                   target="_blank" 
                   rel="noopener noreferrer"
                   className="text-sage-400 hover:text-sage-300 transition flex items-center gap-2"
